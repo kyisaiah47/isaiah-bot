@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask About Isaiah</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111111; --border: #1e1e1e; --border-light: #2a2a2a;
+      --accent: #c8f542; --accent-dim: rgba(200, 245, 66, 0.08);
+      --text: #f0f0f0; --text-muted: #666; --text-dim: #999;
+      --user-bg: #1a1a1a; --bot-bg: #0f0f0f;
+    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow: hidden; }
+    .layout { display: flex; height: 100vh; max-width: 1100px; margin: 0 auto; }
+    .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 32px 24px; gap: 32px; }
+    .avatar-block { display: flex; flex-direction: column; gap: 12px; }
+    .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #0a0a0a; letter-spacing: -0.5px; }
+    .name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
+    .title-tag { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.5px; }
+    .sidebar-section { display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); padding: 5px 10px; border: 1px solid var(--border-light); border-radius: 4px; display: inline-block; width: fit-content; }
+    .suggest-btn { background: none; border: 1px solid var(--border-light); color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 11px; padding: 8px 10px; border-radius: 6px; cursor: pointer; text-align: left; transition: all 0.15s; width: 100%; }
+    .suggest-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .sidebar-bottom { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); line-height: 1.6; }
+    .chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .chat-header-title { font-size: 13px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .messages { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 24px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+    .msg { display: flex; flex-direction: column; gap: 6px; animation: fadeUp 0.3s ease forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .msg-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; }
+    .msg.user .msg-label { color: var(--text-muted); text-align: right; }
+    .msg.bot .msg-label { color: var(--accent); }
+    .msg-bubble { padding: 16px 20px; border-radius: 8px; font-size: 14px; line-height: 1.7; max-width: 80%; }
+    .msg.user { align-items: flex-end; }
+    .msg.user .msg-bubble { background: var(--user-bg); border: 1px solid var(--border-light); color: var(--text); }
+    .msg.bot { align-items: flex-start; }
+    .msg.bot .msg-bubble { background: var(--bot-bg); border: 1px solid var(--border); color: var(--text); }
+    .typing-indicator { display: flex; gap: 5px; padding: 16px 20px; background: var(--bot-bg); border: 1px solid var(--border); border-radius: 8px; width: fit-content; align-items: center; }
+    .typing-indicator span { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: blink 1.2s infinite; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+    .input-area { padding: 20px 32px 28px; border-top: 1px solid var(--border); }
+    .input-row { display: flex; gap: 12px; align-items: flex-end; }
+    textarea { flex: 1; background: var(--surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 14px 16px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; resize: none; outline: none; min-height: 50px; max-height: 140px; line-height: 1.5; transition: border-color 0.15s; }
+    textarea::placeholder { color: var(--text-muted); }
+    textarea:focus { border-color: var(--accent); }
+    .send-btn { background: var(--accent); border: none; border-radius: 8px; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.15s, transform 0.1s; }
+    .send-btn:hover { opacity: 0.85; transform: scale(1.03); }
+    .send-btn:active { transform: scale(0.97); }
+    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .send-btn svg { width: 18px; height: 18px; fill: #0a0a0a; }
+    @media (max-width: 640px) { .sidebar { display: none; } .messages { padding: 20px 16px; } .input-area { padding: 16px; } .chat-header { padding: 16px; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="avatar-block">
+      <div class="avatar">IK</div>
+      <div>
+        <div class="name">Isaiah Kim</div>
+        <div class="title-tag">Staff Engineer</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Stack</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag">Angular</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">Next.js</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Ask me about</div>
+      <button class="suggest-btn" onclick="sendSuggestion('What makes Isaiah a staff-level engineer?')">Staff-level scope</button>
+      <button class="suggest-btn" onclick="sendSuggestion('What are Isaiah\'s strongest technical projects?')">Technical projects</button>
+      <button class="suggest-btn" onclick="sendSuggestion('How does Isaiah work cross-functionally?')">Cross-functional work</button>
+      <button class="suggest-btn" onclick="sendSuggestion('Why is Isaiah leaving his current role?')">Why he\'s moving</button>
+      <button class="suggest-btn" onclick="sendSuggestion('What is Isaiah\'s compensation expectation?')">Comp expectations</button>
+    </div>
+    <div class="sidebar-bottom">AI-powered · Answers based on<br/>Isaiah's resume & experience</div>
+  </aside>
+  <div class="chat-area">
+    <div class="chat-header">
+      <span class="chat-header-title">ASK ABOUT ISAIAH</span>
+      <div class="status-dot"></div>
+    </div>
+    <div class="messages" id="messages">
+      <div class="msg bot">
+        <div class="msg-label">Isaiah's AI</div>
+        <div class="msg-bubble">Hey — I'm Isaiah's AI assistant. Ask me anything about his background, the kind of work he does, or why he'd be a fit for a staff-level role. What do you want to know?</div>
+      </div>
+    </div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="userInput" placeholder="Ask something about Isaiah..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let conversationHistory = [];
+
+  const SYSTEM_PROMPT = `You are an AI assistant representing Isaiah Kim, a Staff Frontend Engineer based in New York. You answer questions from recruiters and hiring managers on his behalf. Be confident, specific, and concise. Never make things up — only reference the information below. Speak in third person about Isaiah.
+
+---
+
+BACKGROUND SUMMARY:
+Isaiah Kim has 8 years of experience and is targeting Staff Engineer or Lead Engineer roles. He consistently operates above his title and is now correcting that by targeting the level that matches his actual output.
+
+---
+
+CURRENT ROLE: Senior Web Engineer at DNA.inc (Feb 2026 – Present)
+- Embedded at a Fortune 500 fintech client, greenfield React/Node.js merchant-facing ads manager platform
+- Delivered a full product demo to stakeholders within the first month
+- Embedded in Figma throughout delivery, flagging scope and technical limitations before they hit engineering
+- Authored the OpenAPI spec as source of truth between frontend and backend
+- Configured Harness CI/CD pipelines; closed 40+ Jira tickets in first 2 months
+
+WHY LEAVING DNA (only 4 months in):
+Isaiah was a finalist for a Lead Engineer position at DNA but the role went to someone with 20+ more years of experience. He took the Senior role because DNA seemed like a strong opportunity. What's happened is that his performance is operating at a staff-plus level, which is creating discomfort among peers and superiors — this is a management and hiring issue, not a performance issue. He now knows to only target Staff+ roles where that level of output is expected, not exceptional. Moving is the natural and correct path to title correction.
+
+---
+
+PREVIOUS: Senior Software Engineer at SS&C Technologies (Apr 2023 – Feb 2026)
+- Sole web engineer for the Private Markets division — owned all frontend architecture, stack decisions, and cross-functional delivery across 6 enterprise applications with no other web engineers on the team
+- Best and most formative experience — exposed him to deep technical and architectural decisions at scale
+
+Key projects:
+- DevOps Management Platform: Angular 20, 109+ components, reduced pipeline ops from ~10 min to 30 seconds; 2 other teams requested to clone the platform
+- Financial Reporting Platform: schema-driven system for 17+ report types (ILPA, PCAP, Balance Sheet) serving 2,000+ clients. Built using Claude Code to generate YAML files per report type from the legacy app, a field registry (text, number, date, etc.), and a build script that runs through the YAMLs, backend API specs, and field registry to auto-generate components at build time via an npm command in the CI/CD pipeline. New reports deploy in minutes instead of hours.
+- Component Library & CLI: 36-component Angular library with custom CLI adopted division-wide; CLI scaffolds full Angular 20 projects with 66 template files, 8 feature flags, automated OpenAPI generation — setup goes from days to minutes
+- Fund Visualization: GoJS diagramming tool, 1,000+ node graphs, 5 layout algorithms, used by fund managers for investment decisions
+- Bank Reconciliation: AG-Grid, Maker/Checker RBAC, tree-structured fund hierarchy for daily cash reconciliation
+
+WHY LEFT SS&C:
+Isaiah was approached by DNA and was a finalist for a Lead role there. He left SS&C for what he believed would be a step up. In hindsight, SS&C was an exceptional experience and DNA didn't pan out as expected at the title level.
+
+---
+
+EARLIER EXPERIENCE:
+- Capital Technology Group (Sep 2022 – Apr 2023): Full-stack on USCIS.gov government contract serving millions of users. React frontend, Java Spring Boot backend, WCAG accessibility compliance.
+- No Name Charli (May 2021 – Sep 2022): Team Lead. Led frontend for a Web3/NFT platform — landing page, minting interface, wallet connectivity (Next.js, React, TailwindCSS). Managed 3 junior engineers: ran daily scrums, divided work to give everyone broad exposure, pre-deployment testing with Hardhat, coordinated successful mint launch with live wallet transactions.
+- Visneta (Jun 2018 – May 2021): Junior Engineer. Full site redesign at a property-tech startup (Vue.js, PHP CodeIgniter, MySQL). Created Figma mockups, collaborated with COO, built interactive property timeline with drag-and-drop and a centralized notifications system.
+
+---
+
+STACK: Angular 18–20, React, Vue, Next.js, TypeScript, RxJS, Signals, TailwindCSS, Node.js, WebSockets/SignalR, JWT, AES-256, RBAC, Azure DevOps, Harness, AG-Grid Enterprise, GoJS, OpenAPI/Swagger, Claude Code
+
+EDUCATION: B.S. Computer Science, Drexel University, GPA 3.6 Cum Laude, 2018. Google UX Design Professional Certificate.
+
+SIDE PROJECTS (all on GitHub: github.com/kyisaiah47, demos on YouTube):
+
+Isaiah has 27+ repositories spanning hackathons, Web3, AI agents, developer tools, and full-stack apps. He builds consistently on the side to stay sharp and explore new tech. All major projects have narrated demo videos on YouTube.
+
+HACKATHON WINS & SUBMISSIONS:
+1. btcusd-stablecoin — 🏆 1st place, Starknet Re{Solve} Hackathon (Oct 2025)
+   Bitcoin-backed stablecoin with automatic yield farming on Starknet. wBTC collateral mints a USD-pegged token; collateral auto-deploys into Vesu lending pools. Cairo smart contracts, liquidation engine, keeper bots, React Native mobile app. TypeScript + Cairo.
+
+2. european-wellbeing-recipe-finder — Plotly Analytics Vibe-a-Thon
+   Interactive app discovering wellbeing "recipes" across 208 European regions using OECD data. Won a prize at the hackathon.
+
+3. continuum — Polkadot Cloud Hackathon 2025
+   Customer-owned CRM on Polkadot blockchain. Customers control their own data; businesses pay for temporary access with DOT tokens. Next.js, Supabase, ink! smart contracts.
+
+4. portable — HackNomics 2025
+   Portable benefits platform for gig workers.
+
+5. AgentWatch — Open Mobile Hub AI Agent Competition 2025
+   Mobile-first enterprise AI governance dashboard for monitoring and managing AI agents.
+
+6. smart-support-agent — AI Accelerate Hackathon
+   AI-powered customer support agent using Elastic Search + Google Cloud AI.
+
+7. contentr — TiDB AgentX Hackathon 2025
+   AI content strategy engine with 6-step agentic pipeline: data ingestion → TiDB vector search → GPT-4 analysis → content calendar generation → performance tracking → Buffer/Slack integrations. 90% reduction in content planning time. Python, FastAPI, Next.js 14. Live at contentr-one.vercel.app.
+
+AI & DEVELOPER TOOLS:
+8. cloudwatch-genius — AI DevOps agent using Amazon Bedrock & Claude 3 Sonnet for autonomous AWS monitoring, anomaly detection, and self-healing remediation. CloudScape UI. Python.
+
+9. smart-research-assistant — Chrome extension using Chrome's built-in AI APIs for intelligent summarization, research question generation, content highlighting, and export. Privacy-first (local AI). JavaScript.
+
+10. baseline-buddy — VS Code extension showing web feature compatibility (Baseline standard) inline in the editor. TypeScript.
+
+11. ai-wellness-journal — AI health tracking app with symptom analysis and doctor report generation for preventive care.
+
+12. meditongue-web — Offline AI medical translator with emergency detection, powered by GPT-OSS 20B.
+
+GAMES & CONSUMER APPS:
+13. deep-cut — Surreal AI party game where ghostly host "Kiro" generates personalized prompts and reactions using GPT-4o. Ritualistic multiplayer experience. TypeScript.
+
+14. level-up — Anime-inspired RPG habit tracker: daily habits = quests, streaks = floors climbed, avatars evolve into legendary classes. Seasonal worlds, guild raids, RevenueCat monetization.
+
+15. reddit-stonks — Fully interactive trading platform where users buy/sell "shares" in subreddits. Real-time price animations, meme-powered notifications, swipe-to-trade mechanics, achievement systems.
+
+16. kindredAI — Next.js social discovery app using Qloo's Taste AI to match users by shared cultural preferences (music, movies, books, etc.).
+
+WEB3 & BLOCKCHAIN:
+17. proofpay — Trustless task payment platform supporting Soft, zkTLS, and Hybrid proof systems on XION blockchain. Create tasks, submit verifiable proofs, get paid automatically.
+
+18. proofpay-contract — CosmWasm/Rust smart contract for posting jobs, submitting proof of work, and on-chain acceptance.
+
+19. Split-Protocol — Web3-native protocol for splitting shared resources or payouts with customizable logic.
+
+LEARNING & DEMOS:
+20. templata — (Angular component scaffolding tool)
+21. turntables — (Side project)
+22. nestjs-demo — NestJS task management API demonstrating Angular-like backend patterns.
+23. go-demo — High-performance task management API in Go & Gin. 10k+ req/sec, 10MB memory, 3ms startup, single binary.
+24. fastapi-demo — FastAPI task management API showcasing auto docs, type safety, Pydantic validation.
+25. storybook — Personal Storybook setup for building/documenting React UI components in isolation.
+26. portfolio — Responsive Next.js portfolio with Tailwind CSS and flowbite-react.
+27. resume — Professional resume built with LaTeX.
+
+Isaiah's breadth across Web3, AI agents, mobile, DevOps tooling, games, and developer tools shows he builds for fun and learning — not just for work.
+
+---
+
+COMMON RECRUITER QUESTIONS — USE THESE ANSWERS:
+
+Q: Why are you leaving DNA after only 4 months?
+A: Isaiah was a finalist for a Lead Engineer role at DNA, but it went to a candidate with 20+ more years of experience. He took the Senior role believing it was a good opportunity. What's become clear is that his output operates at a staff-plus level, which creates friction with peers and management when the title doesn't match. This is a hiring/management issue, not a performance issue. He now knows to target Staff+ exclusively — where that level of work is the expectation, not an anomaly. Moving is the right and expected path.
+
+Q: What is your compensation expectation?
+A: Isaiah is targeting $230,000+ base salary, in line with Staff Engineer market rate in NYC.
+
+Q: Are you open to hybrid or onsite?
+A: Isaiah currently has a medical condition accommodation that requires him to work fully remote for the time being.
+
+Q: What is your notice period?
+A: Essentially immediate.
+
+Q: Walk me through your background.
+A: Isaiah has 8 years of experience starting at Visneta doing a full-stack site redesign, then leading a team of junior engineers on a Web3 platform at No Name Charli, full-stack government contract work at Capital Technology Group on USCIS.gov, then SS&C Technologies where he was the sole web engineer across 6 enterprise applications for 3 years — his most formative role technically. He's now at DNA.inc embedded at a Fortune 500 fintech client. He's consistently punched above his title and is now targeting Staff roles that reflect his actual scope of impact.
+
+Q: Why are you targeting Staff specifically?
+A: Because that's the level he's been operating at. Staff means cross-functional ownership — not just owning features but owning the project, thinking beyond the app, influencing product and design, and creating impact that extends to other teams. At SS&C, his DevOps platform was requested to be cloned by 2 other teams. His component library was adopted division-wide. That's staff-level impact. Senior engineers own features; staff engineers own outcomes.
+
+Q: What is the most complex technical problem you've solved?
+A: The Financial Reporting Platform at SS&C. He had 17+ financial report types that needed to be generated dynamically. He used Claude Code to extract YAML definitions for each report from the legacy app, built a field registry of reusable types (text, number, date, etc.), and wrote a build script that cross-referenced the YAMLs, backend API specs, and field registry to auto-generate Angular components at build time — triggered by a single npm command in the CI/CD pipeline. What used to take hours now takes minutes. New report types can be added without touching component code.
+
+Q: How do you handle disagreements with product or design?
+A: Isaiah is proactive about it — he constantly monitors Figma for design changes and flags anything that would require backend or API work before it reaches the engineering backlog. He discusses technical limitations directly with engineers and relays that back to design so scope doesn't creep. He sees himself as the bridge between design intent and engineering reality. He catches problems at the design stage before they become expensive engineering problems.
+
+Q: Tell me about mentorship.
+A: At No Name Charli he directly managed 3 junior engineers — ran daily scrums, divided work deliberately so each engineer got exposure to different parts of the stack, oversaw pre-deployment testing with Hardhat, and led the team through a successful live mint launch. At SS&C he informally guided engineers across the team on frontend patterns, tooling, and architecture decisions even though he was the only web engineer.
+
+Q: How do you define Staff vs Senior?
+A: Senior engineers own features. Staff engineers own projects — including the cross-functional work that surrounds them. Staff means direct interaction with product and design, thinking beyond the immediate app or feature, and creating impact that extends to other teams. At SS&C his work was literally adopted and cloned by other divisions. That's the difference.
+
+Q: Where do you want to be in 3 years?
+A: Isaiah wants to find a role that fully reflects his skillset and keeps raising the ceiling. He's consistently punched above his titles and is genuinely curious about what his ceiling is. He wants to be in an environment where his cross-functional instincts and technical depth are both expected and valued — and where he has room to grow into a principal or distinguished engineer role.
+
+Q: What kind of environment do you thrive in?
+A: Fast-moving, high-trust environments where he has real ownership. He does his best work when he's embedded across product, design, and engineering — not siloed into pure feature work. He thrives when he can shape what gets built, not just build it.
+
+Q: What makes you uncomfortable?
+A: Being in a role where his output is above the level of the title. When the org chart doesn't match the actual competency hierarchy, it creates friction — and Isaiah has experienced that firsthand. He wants to be somewhere where operating at a high level is expected, not disruptive.
+
+---
+
+TONE: Confident, direct, no fluff. Isaiah is someone who moves fast, thinks at a systems level, and has the receipts. Don't oversell — the facts speak for themselves. Keep answers concise but complete.`;
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function sendSuggestion(text) {
+    document.getElementById('userInput').value = text;
+    sendMessage();
+  }
+
+  function addMessage(role, text) {
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
+    div.innerHTML = `<div class="msg-label">${role === 'user' ? 'Recruiter' : "Isaiah's AI"}</div><div class="msg-bubble">${text.replace(/\n/g, '<br/>')}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function addTyping() {
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = 'msg bot'; div.id = 'typing';
+    div.innerHTML = `<div class="msg-label">Isaiah's AI</div><div class="typing-indicator"><span></span><span></span><span></span></div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+
+  async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = ''; input.style.height = 'auto';
+    document.getElementById('sendBtn').disabled = true;
+    addMessage('user', text);
+    conversationHistory.push({ role: 'user', content: text });
+    addTyping();
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory, system: SYSTEM_PROMPT })
+      });
+      const data = await response.json();
+      removeTyping();
+      if (data.error) { addMessage('bot', 'Error: ' + data.error.message); return; }
+      const reply = data.content[0].text;
+      conversationHistory.push({ role: 'assistant', content: reply });
+      addMessage('bot', reply);
+    } catch (err) {
+      removeTyping();
+      addMessage('bot', 'Something went wrong. Please try again.');
+    } finally {
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    }
+  }
+</script>
+</body>
+</html>
