@@ -26,6 +26,10 @@
     .suggest-btn { background: none; border: 1px solid var(--border-light); color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 11px; padding: 8px 10px; border-radius: 6px; cursor: pointer; text-align: left; transition: all 0.15s; width: 100%; }
     .suggest-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
     .sidebar-bottom { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); line-height: 1.6; }
+    .socials { display: flex; flex-direction: column; gap: 6px; }
+    .social-link { display: flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); text-decoration: none; padding: 6px 8px; border-radius: 6px; transition: all 0.15s; }
+    .social-link:hover { background: var(--accent-dim); color: var(--accent); }
+    .social-link svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
     .chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .chat-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .chat-header-title { font-size: 13px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; }
@@ -61,9 +65,39 @@
     .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
     .send-btn svg { width: 18px; height: 18px; fill: #ffffff; }
     @media (max-width: 640px) { .sidebar { display: none; } .messages { padding: 20px 16px; } .input-area { padding: 16px; } .chat-header { padding: 16px; } }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; max-width: 480px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
+    .modal-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+    .modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; }
+    .modal-body { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+    .modal-steps { display: flex; flex-direction: column; gap: 10px; }
+    .modal-step { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; line-height: 1.6; color: var(--text-dim); }
+    .modal-step-num { font-family: 'DM Mono', monospace; font-size: 10px; background: var(--accent); color: #fff; border-radius: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .modal-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 14px 20px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; width: 100%; }
+    .modal-cta:hover { opacity: 0.85; }
+    .modal-fine { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); text-align: center; }
   </style>
 </head>
 <body>
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div>
+      <div class="modal-eyebrow">Welcome</div>
+      <div class="modal-title">Meet Isaiah's AI Assistant</div>
+    </div>
+    <div class="modal-body">
+      This is an AI trained on Isaiah Kim's resume, work history, and experience. It's here to answer your questions as a recruiter or hiring manager — no fluff, just the facts.
+    </div>
+    <div class="modal-steps">
+      <div class="modal-step"><div class="modal-step-num">1</div><span>Ask anything about Isaiah's background, stack, projects, or work style</span></div>
+      <div class="modal-step"><div class="modal-step-num">2</div><span>Use the suggested prompts on the left to get started quickly</span></div>
+      <div class="modal-step"><div class="modal-step-num">3</div><span>Reach out directly via the links in the sidebar if you want to connect</span></div>
+    </div>
+    <button class="modal-cta" onclick="closeModal()">Start Chatting</button>
+    <div class="modal-fine">Responses are AI-generated based on Isaiah's actual experience</div>
+  </div>
+</div>
+
 <div class="layout">
   <aside class="sidebar">
     <div class="avatar-block">
@@ -74,18 +108,37 @@
       </div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-label">Stack</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;">
-        <span class="tag">Angular</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">Next.js</span>
-      </div>
-    </div>
-    <div class="sidebar-section">
       <div class="sidebar-label">Ask me about</div>
       <button class="suggest-btn" onclick="sendSuggestion('What makes Isaiah a staff-level engineer?')">Staff-level scope</button>
       <button class="suggest-btn" onclick='sendSuggestion("What are Isaiah&apos;s strongest technical projects?")'>Technical projects</button>
       <button class="suggest-btn" onclick='sendSuggestion("How does Isaiah work cross-functionally?")'>Cross-functional work</button>
       <button class="suggest-btn" onclick='sendSuggestion("Why is Isaiah leaving his current role?")'>Why he's moving</button>
       <button class="suggest-btn" onclick='sendSuggestion("What is Isaiah&apos;s compensation expectation?")'>Comp expectations</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Connect</div>
+      <div class="socials">
+        <a class="social-link" href="https://linkedin.com/in/kyisaiah47" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          linkedin.com/in/kyisaiah47
+        </a>
+        <a class="social-link" href="https://github.com/kyisaiah47" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          github.com/kyisaiah47
+        </a>
+        <a class="social-link" href="https://youtube.com/@kyisaiah47" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          youtube.com/@kyisaiah47
+        </a>
+        <a class="social-link" href="mailto:kyisaiah47@gmail.com">
+          <svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-.726.47-1.345 1.12-1.571L12 11.73l10.88-7.844A1.636 1.636 0 0124 5.457z"/></svg>
+          kyisaiah47@gmail.com
+        </a>
+        <a class="social-link" href="https://drive.google.com/file/d/1m9xFdjeygkCgwO7uAKDrqJ1nUUysyuGB/view?usp=drive_link" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M4.433 22.396l4-6.929H24l-4 6.929H4.433zm3.566-6.929L4.433 22.396 0 14.983l7.607-13.18 3.567 6.175-3.175 5.49zm12.394-1.234H12l-3.567-6.175L12.001 1.6h7.998l-3.566 6.175 4 6.457-.04.001z"/></svg>
+          View Resume
+        </a>
+      </div>
     </div>
     <div class="sidebar-bottom">AI-powered · Answers based on<br/>Isaiah's resume & experience</div>
   </aside>
@@ -111,6 +164,10 @@
   </div>
 </div>
 <script>
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
   let conversationHistory = [];
 
   const SYSTEM_PROMPT = `You are an AI assistant representing Isaiah Kim, a Staff Frontend Engineer based in New York. You answer questions from recruiters and hiring managers on his behalf. Be confident, specific, and concise. Never make things up — only reference the information below. Speak in third person about Isaiah.
