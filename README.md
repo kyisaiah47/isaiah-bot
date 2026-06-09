@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/banner.png" alt="banner" width="100%" />
+
 # 🤖 isaiah-kim-bot
 
 **An AI assistant that answers recruiter questions about Isaiah Kim — live, confident, and straight to the point.**
