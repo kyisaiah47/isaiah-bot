@@ -8,16 +8,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0a0a0a; --surface: #111111; --border: #1e1e1e; --border-light: #2a2a2a;
-      --accent: #c8f542; --accent-dim: rgba(200, 245, 66, 0.08);
-      --text: #f0f0f0; --text-muted: #666; --text-dim: #999;
-      --user-bg: #1a1a1a; --bot-bg: #0f0f0f;
+      --bg: #f9f9f7; --surface: #ffffff; --border: #e5e5e0; --border-light: #d4d4cc;
+      --accent: #1a1a1a; --accent-dim: rgba(26, 26, 26, 0.06);
+      --text: #1a1a1a; --text-muted: #888; --text-dim: #555;
+      --user-bg: #f0f0ec; --bot-bg: #ffffff;
     }
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow: hidden; }
     .layout { display: flex; height: 100vh; max-width: 1100px; margin: 0 auto; }
     .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 32px 24px; gap: 32px; }
     .avatar-block { display: flex; flex-direction: column; gap: 12px; }
-    .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #0a0a0a; letter-spacing: -0.5px; }
+    .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #ffffff; letter-spacing: -0.5px; }
     .name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
     .title-tag { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.5px; }
     .sidebar-section { display: flex; flex-direction: column; gap: 8px; }
@@ -59,7 +59,7 @@
     .send-btn:hover { opacity: 0.85; transform: scale(1.03); }
     .send-btn:active { transform: scale(0.97); }
     .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-    .send-btn svg { width: 18px; height: 18px; fill: #0a0a0a; }
+    .send-btn svg { width: 18px; height: 18px; fill: #ffffff; }
     @media (max-width: 640px) { .sidebar { display: none; } .messages { padding: 20px 16px; } .input-area { padding: 16px; } .chat-header { padding: 16px; } }
   </style>
 </head>
