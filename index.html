@@ -214,67 +214,93 @@ EARLIER EXPERIENCE:
 
 ---
 
-STACK: Angular 18–20, React, Vue, Next.js, TypeScript, RxJS, Signals, TailwindCSS, Node.js, WebSockets/SignalR, JWT, AES-256, RBAC, Azure DevOps, Harness, AG-Grid Enterprise, GoJS, OpenAPI/Swagger, Claude Code
+STACK: Angular 18–20, React, Vue, Next.js, TypeScript, RxJS, Signals, TailwindCSS, Node.js, WebSockets/SignalR, JWT, AES-256, RBAC, Azure DevOps, Harness, AG-Grid Enterprise, GoJS, OpenAPI/Swagger, Claude Code, Cairo, Python, Go, Starknet
 
 EDUCATION: B.S. Computer Science, Drexel University, GPA 3.6 Cum Laude, 2018. Google UX Design Professional Certificate.
 
 SIDE PROJECTS (all on GitHub: github.com/kyisaiah47, demos on YouTube):
 
-Isaiah has 27+ repositories spanning hackathons, Web3, AI agents, developer tools, and full-stack apps. He builds consistently on the side to stay sharp and explore new tech. All major projects have narrated demo videos on YouTube.
+Isaiah has 35+ repositories spanning hackathons, AI agents, Web3, developer tools, games, and full-stack apps. He builds consistently on the side to stay sharp and explore new tech. All major projects have narrated demo videos on YouTube at youtube.com/@kyisaiah47.
 
 HACKATHON WINS & SUBMISSIONS:
 1. btcusd-stablecoin — 🏆 1st place, Starknet Re{Solve} Hackathon (Oct 2025)
-   Bitcoin-backed stablecoin with automatic yield farming on Starknet. wBTC collateral mints a USD-pegged token; collateral auto-deploys into Vesu lending pools. Cairo smart contracts, liquidation engine, keeper bots, React Native mobile app. TypeScript + Cairo.
+   Bitcoin-backed stablecoin with automatic yield farming on Starknet. wBTC collateral mints a USD-pegged token; collateral auto-deploys into Vesu lending pools for real yield. Cairo smart contracts, liquidation engine, keeper bots, React Native mobile app. TypeScript + Cairo.
 
-2. european-wellbeing-recipe-finder — Plotly Analytics Vibe-a-Thon
-   Interactive app discovering wellbeing "recipes" across 208 European regions using OECD data. Won a prize at the hackathon.
+2. rankforge — H0 Hackathon (Track 3: Million-scale global app)
+   Drop-in leaderboard-as-a-service for game developers. DynamoDB single-table design, real-time SSE score updates, multi-period boards (all-time, daily, weekly, monthly) with TTL-based cleanup — no cron jobs. Next.js 16 PPR, React 19, key-authenticated REST API. Live demo on Vercel.
 
-3. continuum — Polkadot Cloud Hackathon 2025
-   Customer-owned CRM on Polkadot blockchain. Customers control their own data; businesses pay for temporary access with DOT tokens. Next.js, Supabase, ink! smart contracts.
+3. match-day-commander — FIFA World Cup 2026 Hackathon
+   AI agent helping local businesses near FIFA World Cup 2026 venues maximize match day revenue. Real-time crowd intelligence, dynamic offer generation, inventory alerts, and customer messaging — powered by Gemini 2.5 + MongoDB Atlas.
 
-4. portable — HackNomics 2025
-   Portable benefits platform for gig workers.
+4. AgentWatch — Open Mobile Hub AI Agent Competition 2025
+   Mobile-first enterprise AI governance dashboard for monitoring and managing AI agents in real-time. React Native.
 
-5. AgentWatch — Open Mobile Hub AI Agent Competition 2025
-   Mobile-first enterprise AI governance dashboard for monitoring and managing AI agents.
+5. continuum — Polkadot Cloud Hackathon 2025
+   Customer-owned CRM on Polkadot blockchain. Customers control their data in a personal wallet; businesses submit time-limited DOT token payments for access. Consent recorded on-chain via ink! smart contracts. Next.js, Supabase.
 
-6. smart-support-agent — AI Accelerate Hackathon
-   AI-powered customer support agent using Elastic Search + Google Cloud AI.
+6. portable — HackNomics 2025
+   Portable benefits platform giving gig workers access to health, retirement, and insurance that travels with them between jobs.
 
-7. contentr — TiDB AgentX Hackathon 2025
-   AI content strategy engine with 6-step agentic pipeline: data ingestion → TiDB vector search → GPT-4 analysis → content calendar generation → performance tracking → Buffer/Slack integrations. 90% reduction in content planning time. Python, FastAPI, Next.js 14. Live at contentr-one.vercel.app.
+7. smart-support-agent — AI Accelerate Hackathon
+   AI-powered customer support agent using Elastic Search + Google Cloud AI (Gemini Pro). Hybrid semantic search, FastAPI backend, React UI.
 
-AI & DEVELOPER TOOLS:
-8. cloudwatch-genius — AI DevOps agent using Amazon Bedrock & Claude 3 Sonnet for autonomous AWS monitoring, anomaly detection, and self-healing remediation. CloudScape UI. Python.
+8. contentr — TiDB AgentX Hackathon 2025
+   AI content strategy engine with 6-step agentic pipeline: data ingestion → TiDB vector search → GPT-4 analysis → content calendar → performance tracking → Buffer/Slack integrations. 90% reduction in content planning time. Python, FastAPI, Next.js 14.
 
-9. smart-research-assistant — Chrome extension using Chrome's built-in AI APIs for intelligent summarization, research question generation, content highlighting, and export. Privacy-first (local AI). JavaScript.
+9. european-wellbeing-recipe-finder — Plotly Analytics Vibe-a-Thon
+   Interactive app discovering wellbeing "recipes" across 208 European regions using OECD data. Won a prize at the hackathon. Python, Plotly.
 
-10. baseline-buddy — VS Code extension showing web feature compatibility (Baseline standard) inline in the editor. TypeScript.
+AI AGENTS & DEVELOPER TOOLS:
+10. splunk-agentic-ops — Autonomous AI agent that investigates Splunk alerts using Claude and delivers formatted incident reports to Slack. Agentic loop with MCP integration, root-cause synthesis, and Slack Block Kit output. Python.
 
-11. ai-wellness-journal — AI health tracking app with symptom analysis and doctor report generation for preventive care.
+11. argus — Autonomous DFIR (Digital Forensics & Incident Response) agent on SANS SIFT Workstation. Corroborates every finding with a second tool before reporting — no single-source conclusions. Claude Opus + MCP + Volatility 3 + log2timeline. Python.
 
-12. meditongue-web — Offline AI medical translator with emergency detection, powered by GPT-OSS 20B.
+12. incident-response-agent — Slack-native incident command center. Declare incidents, auto-create war rooms, page on-call via PagerDuty, pull Datadog monitor context, and generate AI postmortems — all from a single Slack command. Deno + TypeScript.
+
+13. multiagent-code-review — Five specialist AI agents (security, performance, correctness, style, architecture) review code concurrently, debate findings, and deliver a consensus report. Powered by Qwen Cloud. Python.
+
+14. agentic-sdlc — Full PR-to-production agentic pipeline. Claude Code reviews PRs, UiPath Test Cloud runs tests, Maestro BPMN orchestrates the workflow with human approval gates before deploy. Python.
+
+15. interview-tree — Turn user interview transcripts into structured opportunity trees using Claude AI. Paste a transcript, get back a hierarchical map of user problems, needs, and opportunities. Next.js, Tailwind.
+
+16. cloudwatch-genius — AI DevOps agent using Amazon Bedrock & Claude 3 Sonnet for autonomous AWS infrastructure monitoring, anomaly detection, and self-healing remediation. CloudScape UI with real-time dashboards. Python.
+
+17. remi — AI receptionist for local service businesses. Handles inbound WhatsApp messages 24/7 — understands customer intent, books appointments, and confirms availability against the live calendar. Gemini + Twilio + Firebase + Next.js. Live at remiai.vercel.app.
+
+18. templata — AI-powered playbook platform. Describe a life event in plain language ("wedding in NYC, $50k budget, 80 guests") and Claude generates a structured, personalized playbook with Tasks, Questions, and Resources. Playbooks are shareable and forkable. Next.js, Supabase.
+
+19. isaiah-bot — This app. AI recruiter chatbot that answers questions about Isaiah on behalf of recruiters and hiring managers. Claude Sonnet, Vercel serverless. Live at isaiah-kim-bot.vercel.app.
+
+20. smart-research-assistant — Chrome extension using Chrome's built-in Gemini Nano APIs for intelligent summarization, research question generation, content highlighting, and export. Fully local — no API keys, no data leaves the browser. JavaScript.
+
+21. baseline-buddy — VS Code extension showing web feature compatibility (Baseline standard) inline in the editor. TypeScript.
+
+22. cloudwatch-genius — AI DevOps agent using Amazon Bedrock & Claude 3 Sonnet. Python.
 
 GAMES & CONSUMER APPS:
-13. deep-cut — Surreal AI party game where ghostly host "Kiro" generates personalized prompts and reactions using GPT-4o. Ritualistic multiplayer experience. TypeScript.
+23. turntables — AI-powered restaurant management: no-show prediction, smart seating optimization, and dynamic wait time estimates via Google Gemini agents on Cloud Run. Next.js frontend.
 
-14. level-up — Anime-inspired RPG habit tracker: daily habits = quests, streaks = floors climbed, avatars evolve into legendary classes. Seasonal worlds, guild raids, RevenueCat monetization.
+24. deep-cut — Surreal AI party game where ghostly host "Kiro" generates personalized prompts and reactions using GPT-4o. Ritualistic multiplayer experience with real-time Supabase state. TypeScript, Next.js.
 
-15. reddit-stonks — Fully interactive trading platform where users buy/sell "shares" in subreddits. Real-time price animations, meme-powered notifications, swipe-to-trade mechanics, achievement systems.
+25. level-up — Anime-inspired RPG habit tracker: daily habits = quests, streaks = floors climbed, avatars evolve into legendary classes. Seasonal worlds, guild raids, RevenueCat monetization. React Native.
 
-16. kindredAI — Next.js social discovery app using Qloo's Taste AI to match users by shared cultural preferences (music, movies, books, etc.).
+26. reddit-stonks — Fully interactive trading platform where users buy/sell "shares" in subreddits. Real-time price animations, meme-powered notifications, swipe-to-trade mechanics, achievement systems. Devvit + TypeScript.
+
+27. kindredAI — Next.js social discovery app using Qloo's Taste AI to match users by shared cultural preferences (music, movies, books, etc.). Framer Motion, Supabase.
+
+28. ai-wellness-journal — AI health tracking app with symptom analysis and doctor-ready report generation for preventive care. Next.js, Gemini, Supabase.
+
+29. meditongue-web — Offline AI medical translator with emergency detection. Powered by GPT-OSS 20B running locally via Ollama. Next.js, Node.js.
 
 WEB3 & BLOCKCHAIN:
-17. proofpay — Trustless task payment platform supporting Soft, zkTLS, and Hybrid proof systems on XION blockchain. Create tasks, submit verifiable proofs, get paid automatically.
+30. proofpay — Trustless task payment platform supporting Soft, zkTLS, and Hybrid proof systems on XION blockchain. Create tasks, submit verifiable proofs, get paid automatically.
 
-18. proofpay-contract — CosmWasm/Rust smart contract for posting jobs, submitting proof of work, and on-chain acceptance.
+31. proofpay-contract — CosmWasm/Rust smart contract for posting jobs, submitting proof of work, and on-chain acceptance.
 
-19. Split-Protocol — Web3-native protocol for splitting shared resources or payouts with customizable logic.
+32. Split-Protocol — Web3-native protocol for splitting shared resources or payouts with customizable logic.
 
 LEARNING & DEMOS:
-20. templata — (Angular component scaffolding tool)
-21. turntables — (Side project)
-22. nestjs-demo — NestJS task management API demonstrating Angular-like backend patterns.
+33. nestjs-demo — NestJS task management API demonstrating Angular-like backend patterns.
 23. go-demo — High-performance task management API in Go & Gin. 10k+ req/sec, 10MB memory, 3ms startup, single binary.
 24. fastapi-demo — FastAPI task management API showcasing auto docs, type safety, Pydantic validation.
 25. storybook — Personal Storybook setup for building/documenting React UI components in isolation.
